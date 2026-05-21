@@ -243,3 +243,85 @@ claude -r
 which will list the previous sessions for me to choose.
 
 ### Models and Usage
+
+Type this to change the model:
+```
+/model
+```
+
+Select one.
+
+Each model has different rates of eating up my token quotas. Go to Settings > Usage to check.
+
+## Commands, Context, Tools & Hooks
+
+### Slash Commands
+
+Some common ones by just typing `/`:
+```
+/doctor
+/usage
+/config
+/theme
+/model
+/init
+```
+
+### The CLAUDE.md File
+
+Type:
+```
+/init
+```
+
+Use it on an existing project, so Claude Code doesn't need to keep scanning.
+
+I also did these to match what the tutorial's CLAUDE.md looks like:
+```
+In the CLAUDE.md, under Architecture, there should be: 1) TechStack 2) Route organisation from Next.js 3) Importt Aliases 4) Styling
+  Architecutre using the multi-layered approach which includes a) global theme and b) component style 5) Component Structure 6) Testing setup 7) Additional Coding Preferences
+
+Do NOT use semicolons for JavaScript or TypeScript code.
+Do NOT apply tailwind classes directly in component templates unless essential or just 1 at most. If an element needs more than a single tailwind class, combine them into a custom class using the @apply directive.
+Use minimal project dependencies where possible.
+Use the git switch -c command to switch to new branches, not git checkout.
+```
+
+And then I added:
+```
+In the CLAUDE.md, under the commands section there should be 1) Development 2) Testing 3) Linting
+```
+
+And then I added:
+```
+In the CLAUDE.md, add a Project Overview section on top of the Commands section
+```
+
+Till now I will leave the CLAUDE.md as it is, but I can always come back to update it when the project is updated.
+
+This CLAUDE.md is at the project scope level. This is project specific. 
+
+I can create a claude file that stores informations across all my projects in my user directory on my machine later on, which is called the user scope. Can look it up later.
+
+### Adding Files as Context
+
+If I want to add a footer component with the copyright content on the splash page, then I should make it very explicit, by adding the splash page's path to the context with `@` symbol.
+
+Just type `@page` then claude code will have a select menu from the code base:
+```
+Make a new footer component with a copyright notice and add it only to 
+  the splash page and auth pages. @app/(public)/page.tsx
+```
+
+If I want to do this:
+```
+Can you create a btn class and styles using the theme colors in @app/globals.css. Then apply that class to the link in the navbar.
+```
+
+I can also use cursor and select the part of the code in the `Navbar.tsx` i.e. the `<Link href="/heists/create">Create Heist</Link>` to tell CC to look there.
+
+I can also use `@` in the CLAUDE.md to manually add files into context of the prompt.
+
+### Adding Images as Context
+
+It's useful when I want to add a design reference for a new component.
