@@ -390,3 +390,107 @@ Rule of thumb, a new dedicated session just for one feature/an area in the appli
 Then, during that session, occasionally use the `/compact` command to clear up the context window once I reach a milestone.
 
 I can use `/rewind` to rewind a session back to an earlier state. I can then decide to restore the code and the convo or either one. Use this command when I notice the convo goes off track.
+
+### Tools
+
+Tools are functions that allow Claude Code to do things.
+
+I just need to type my commands i.e. the prompts, and the prompts got sent to the model. The model looks at the prompts and it reasons what needs to happen for it to complete the task like it decides which tools it needs to call, e.g. a write tool, then the model will tell Claude Code which tools to run to complete the task.
+
+### Permissions & Allowed Tools
+
+For example, if I want to run:
+```
+Search the next.js docs to see how to implememnt dynamic routes
+```
+
+and I want to grant permissions to the `Web Search` tool in this project across all sessions.
+
+(Note that when allowing Claude Code to edit when it asks then the permission only lasts in that session.)
+
+Then, this file will be generated:
+```
+.claude > settings.local.json
+```
+
+To add allowed tools, run `/permissions`.
+
+I can be specific:
+```
+ Add allow permission rule
+
+  Permission rules are a tool name, optionally followed by a specifier in
+  parentheses.
+  e.g., WebFetch or Bash(ls *)
+```
+
+For example, `Bash(git init)` and save this rule to `.claude/settings.local.json` which won't be added to the version control:
+```
+Where should this rule be saved?
+  ❯ 1. Project settings (local)  Saved in .claude\settings.local.json
+    2. Project settings          Checked in at .claude\settings.json
+    3. User settings             Saved in at ~/.claude/settings.json
+```
+
+Then, the `settings.local.json` will become:
+```
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(*)",
+      "Bash(git init)"
+    ]
+  }
+}
+```
+
+Then, test if this permission works by running this prompt:
+```
+initialise a new git repo for this project                                 
+```
+
+It should not ask for permission - yes!
+
+And it prints:
+```
+● The project already has a git repository initialized — the session started
+  with branch main and several commits. No action needed. 
+```
+
+And test if other Bash command is still asking for permissions:
+```
+can you switch to a new branch called feature-abc
+```
+
+Which it does ask for permissions for this Bash command, just as expected:
+```
+Bash command
+
+   git switch -c feature-abc
+   Create and switch to new branch feature-abc
+
+ This command requires approval
+
+ Do you want to proceed?
+ ❯ 1. Yes
+   2. Yes, and don’t ask again for: git switch *
+   3. No
+```
+
+Then, I can add this into permissions by running `/permissions`, and type:
+```
+Bash(git switch:*)
+```
+
+Bascially adding a wildcard after the `switch`.
+
+This time, when I do the same prompt and it's now able to run the Bash command (switch) without asking for permissions:
+```
+
+❯ can you switch to a new branch called feature-abc                          
+
+● Bash(git switch -c feature-abc)
+  ⎿  Switched to a new branch 'feature-abc'
+
+● Now on branch feature-abc.
+```
