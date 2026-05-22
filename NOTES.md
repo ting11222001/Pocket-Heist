@@ -340,3 +340,53 @@ Added the skeleton component in the preview page:
 can you add this skeleton component to the preview page in a grid layout,  
   so we can preview it? 
 ```
+
+### The Context Window
+
+Context Window:
+- 200K tokens ~ 500 pages of text
+- `/compact` runs when at 95% capacity
+
+Run `/context` first and I see:
+```
+ /context 
+  ⎿  Context Usage
+     ⛁ ⛁ ⛀ ⛀ ⛀   Sonnet 4.6
+     ⛁ ⛁ ⛁ ⛁ ⛶   claude-sonnet-4-6
+     ⛶ ⛶ ⛶ ⛶ ⛶   57.2k/200k tokens (29%)
+     ⛶ ⛶ ⛶ ⛶ ⛶ 
+     ⛶ ⛝ ⛝ ⛝ ⛝   Estimated usage by category
+                 ⛁ System prompt: 6.6k tokens (3.3%)
+                 ⛁ System tools: 13.4k tokens (6.7%)
+                 ⛁ Memory files: 893 tokens (0.4%)
+                 ⛁ Skills: 981 tokens (0.5%)
+                 ⛁ Messages: 35.3k tokens (17.6%)
+                 ⛶ Free space: 109.8k (54.9%)
+                 ⛝ Autocompact buffer: 33k tokens (16.5%)
+```
+
+Run `/compact`, and then run `/context` to check if the free space has increased:
+```
+ /context 
+  ⎿  Context Usage
+     ⛁ ⛁ ⛀ ⛀ ⛀   Sonnet 4.6
+     ⛁ ⛶ ⛶ ⛶ ⛶   claude-sonnet-4-6
+     ⛶ ⛶ ⛶ ⛶ ⛶   29.2k/200k tokens (15%)
+     ⛶ ⛶ ⛶ ⛶ ⛶ 
+     ⛶ ⛝ ⛝ ⛝ ⛝   Estimated usage by category
+                 ⛁ System prompt: 6.6k tokens (3.3%)
+                 ⛁ System tools: 13.4k tokens (6.7%)
+                 ⛁ Memory files: 893 tokens (0.4%)
+                 ⛁ Skills: 981 tokens (0.5%)
+                 ⛁ Messages: 7.3k tokens (3.7%)
+                 ⛶ Free space: 137.8k (68.9%)
+                 ⛝ Autocompact buffer: 33k tokens (16.5%)
+```
+
+I can use `/clear` to remove everything in the history.
+
+Rule of thumb, a new dedicated session just for one feature/an area in the application to keep the context window clean.
+
+Then, during that session, occasionally use the `/compact` command to clear up the context window once I reach a milestone.
+
+I can use `/rewind` to rewind a session back to an earlier state. I can then decide to restore the code and the convo or either one. Use this command when I notice the convo goes off track.
