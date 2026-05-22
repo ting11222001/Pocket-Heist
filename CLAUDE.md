@@ -72,6 +72,11 @@ components/Navbar/
   Navbar.tsx
   Navbar.module.css
   index.ts          # re-exports the default export for clean imports
+
+components/Skeleton/
+  Skeleton.tsx
+  Skeleton.module.css
+  index.ts
 ```
 
 ### Testing Setup

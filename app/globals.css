@@ -38,6 +38,11 @@ svg.logo {
   @apply bg-primary text-dark font-semibold px-4 py-2 rounded-lg hover:bg-secondary transition-colors duration-200;
 }
 
+/* component preview grid */
+.skeleton-grid {
+  @apply grid grid-cols-3 gap-4 mt-6;
+}
+
 /* generic page styles */
 .page-content {
   @apply my-4 mx-auto w-6xl min-w-2xl max-w-full;

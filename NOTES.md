@@ -313,15 +313,30 @@ Make a new footer component with a copyright notice and add it only to
   the splash page and auth pages. @app/(public)/page.tsx
 ```
 
-If I want to do this:
+Or if I want to do this:
 ```
 Can you create a btn class and styles using the theme colors in @app/globals.css. Then apply that class to the link in the navbar.
 ```
 
 I can also use cursor and select the part of the code in the `Navbar.tsx` i.e. the `<Link href="/heists/create">Create Heist</Link>` to tell CC to look there.
 
+In CC it will show one line is selected then it knows that's where it should add the new `btn` class style.
+
 I can also use `@` in the CLAUDE.md to manually add files into context of the prompt.
 
 ### Adding Images as Context
 
 It's useful when I want to add a design reference for a new component.
+
+For example:
+```
+Can you make a new Skeleton UI component for later use? Base the design on the following image, but use colours to match this project. @public/skeleton.png
+```
+
+And ideally in CLAUDE.md > Component Structure section, the new component should be updated into that file structure chart. -> need to check on this later.
+
+Added the skeleton component in the preview page:
+```
+can you add this skeleton component to the preview page in a grid layout,  
+  so we can preview it? 
+```

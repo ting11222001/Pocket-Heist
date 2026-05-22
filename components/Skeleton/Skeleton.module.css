@@ -1,0 +1,49 @@
+@reference "../../app/globals.css";
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.card {
+  @apply bg-light rounded-xl p-6 border border-lighter;
+}
+
+.header {
+  @apply flex items-center gap-4 mb-6;
+}
+
+.avatar {
+  @apply bg-lighter rounded-full shrink-0;
+  width: 4rem;
+  height: 4rem;
+  animation: pulse 1.6s ease-in-out infinite;
+}
+
+.headerLines {
+  @apply flex flex-col gap-3 flex-1;
+}
+
+.body {
+  @apply flex flex-col gap-3;
+}
+
+.lineFull {
+  @apply bg-lighter rounded-md;
+  height: 0.75rem;
+  animation: pulse 1.6s ease-in-out infinite;
+}
+
+.lineMed {
+  @apply bg-lighter rounded-md;
+  height: 0.75rem;
+  width: 75%;
+  animation: pulse 1.6s ease-in-out infinite 0.1s;
+}
+
+.lineShort {
+  @apply bg-lighter rounded-md;
+  height: 0.75rem;
+  width: 50%;
+  animation: pulse 1.6s ease-in-out infinite 0.2s;
+}
