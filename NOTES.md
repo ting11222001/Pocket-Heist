@@ -494,3 +494,16 @@ This time, when I do the same prompt and it's now able to run the Bash command (
 
 ● Now on branch feature-abc.
 ```
+
+### Create my own Custom Commands
+
+For example, `/component` which is used whenever I want to create a component etc.
+
+Create a `commands` folder inside the `.claude` folder (this one should be at the project root) and the actual instruction for the command `/commit-message`:
+```
+.claude/commands/commit-message.md
+```
+
+I added those sections in the markdown and list out `allowed-tools` explicitly for that particular command.
+
+Remember to exit the current CC session to allow it to pick up the new commands.
