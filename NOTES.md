@@ -507,3 +507,65 @@ Create a `commands` folder inside the `.claude` folder (this one should be at th
 I added those sections in the markdown and list out `allowed-tools` explicitly for that particular command.
 
 Remember to exit the current CC session to allow it to pick up the new commands.
+
+To test if this new command works, I had to add code changed files to "staged" first and then in CC run `/commit-message`:
+```
+ ---
+  Summary of staged changes:
+
+  - .claude/commands/commit-message.md — New custom slash command definition
+  for /commit-message, including task instructions, allowed tools, commit
+  type emojis, and output format.
+  - NOTES.md — New section documenting how custom commands work in Claude
+  Code, including folder structure, allowed-tools frontmatter, and the
+  requirement to restart the session for new commands to be picked up.
+
+  ---
+  Proposed commit message:
+
+  📝 docs: add custom /commit-message slash command and document how it works
+
+  Adds a reusable /commit-message command so staged changes can be
+  summarised and committed with a consistent format without repeating
+  the instructions each time. Documents the custom commands pattern
+  in NOTES for future reference.
+
+  ---
+  Shall I go ahead and commit with this message?
+  ```
+
+  Then, I responded:
+  ```
+  yes, proceed
+  ```
+
+  It somehow still asked if it can commit despite that I've added the permission in the command file.
+
+So I just double checked:
+```
+Why allowed-tools in the command file didn't prevent it
+
+The frontmatter allowed-tools only grants permission for tools used within that command's flow. The final approval prompt is a project-level safety setting, not a command-level one. So the two need to be set separately.
+```
+
+And I chose `yes, and don't ask again for git commit *`, then here in the `.claude/settings.local.json` is updated:
+```
+{
+  "allowedTools": [
+    "Bash(git commit:*)"
+  ]
+}
+```
+
+So now it can:
+  ```
+  ● Bash(git commit -m "$(cat <<'EOF'
+      📝 docs: add custom /commit-message slash command and document how it
+      works…)
+  ⎿  [feature-abc 0c281bf] 📝 docs: add custom /commit-message slash com
+     mand and document how it works
+      2 files changed, 57 insertions(+), 1 deletion(-)
+      create mode 100644 .claude/commands/commit-message.md
+
+● Committed. Branch feature-abc is now at 0c281bf.
+```
