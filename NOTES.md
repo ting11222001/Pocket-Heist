@@ -612,3 +612,147 @@ So I can replace that section with this:
 - Current git status: !`git status`
 - Current git diff: !`git diff --staged`
 ```
+
+### Command Arguments
+
+Pass extra info to the command.
+
+For example, the comadn can look like this: `/component <arguments>`.
+
+Create `component.md` instruction in the `.claude/commands/component.md`.
+
+Some notes in the `description`:
+- `Glob` is a file pattern matching too for searching the codebase.
+- `Bash(npx vitest:*)` is to let it run any tests it creates for the component.
+
+And then I added each section in the `.claude/commands/component.md`.
+
+Once done, type `exit` to exit the curent Claude Code session and re-enter to let it reload.
+
+And then try:
+```
+/component an avatar component which displays the first letter of a name passed as a prop. If the name is PascalCase, use the first 2 uppercase letters for the avatar. No pics.
+```
+
+It prints:
+```
+● Starting with the test file for Avatar.
+
+  Read 2 files (ctrl+o to expand)
+
+● Write(tests\components\Avatar.test.tsx)
+  ⎿  Wrote 20 lines to tests\components\Avatar.test.tsx
+      1 import { render, screen } from "@testing-library/react"
+      2 import { describe, it, expect } from "vitest"
+      3 import Avatar from "@/components/Avatar"
+      4 
+      5 describe("Avatar", () => {
+      6   it("renders successfully", () => {
+      7     render(<Avatar name="Alice" />)
+      8     expect(screen.getByRole("img", { name: /alice/i })).toBeIn
+        TheDocument()
+      9   })
+     … +12 lines (ctrl+o to expand)
+
+● Bash(cd "C:\Users\Li-Ting\Documents\Projects\Pocket-Heist" && npx vitest
+      run tests/components/Avatar.test.tsx 2>&1)
+  ⎿  Error: Exit code 1
+
+      RUN  v4.0.16 C:/Users/Li-Ting/Documents/Projects/Pocket-Heist
+
+
+     ⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+      FAIL  tests/components/Avatar.test.tsx [ 
+     tests/components/Avatar.test.tsx ]
+     Error: Failed to resolve import "@/components/Avatar" from
+     "tests/components/Avatar.test.tsx". Does the file exist?
+       Plugin: vite:import-analysis
+     … +22 lines (ctrl+o to expand)
+
+● Tests fail as expected — component doesn't exist yet. Creating the
+  component now.
+
+● Bash(mkdir
+      "C:\Users\Li-Ting\Documents\Projects\Pocket-Heist\components\Avatar")
+  ⎿  Done
+  
+● Write(components\Avatar\Avatar.tsx)
+  ⎿  Wrote 22 lines to components\Avatar\Avatar.tsx
+       1 import styles from "./Avatar.module.css"
+       2 
+       3 interface AvatarProps {
+       4   name: string
+       5 }
+       6 
+       7 function getInitials(name: string): string {
+       8   const uppercaseLetters = name.match(/[A-Z]/g) ?? []
+       9   if (uppercaseLetters.length >= 2) {
+      10     return uppercaseLetters[0] + uppercaseLetters[1]
+     … +12 lines (ctrl+o to expand)
+
+● Write(components\Avatar\Avatar.module.css)
+  ⎿  Wrote 5 lines to components\Avatar\Avatar.module.css
+      1 @reference "../../app/globals.css";
+      2 
+      3 .avatar {
+      4   @apply flex items-center justify-center rounded-full bg-prim
+        ary text-dark font-semibold text-sm w-10 h-10 select-none;
+      5 }
+
+● Write(components\Avatar\index.ts)
+  ⎿  Wrote 1 lines to components\Avatar\index.ts
+      1 export { default } from "./Avatar"
+
+● Bash(cd "C:\Users\Li-Ting\Documents\Projects\Pocket-Heist" && npx vitest
+      run tests/components/Avatar.test.tsx 2>&1)
+  ⎿   RUN  v4.0.16 C:/Users/Li-Ting/Documents/Projects/Pocket-Heist
+
+      ✓ tests/components/Avatar.test.tsx (3 tests) 132ms
+     … +6 lines (ctrl+o to expand)
+  ⎿  (timeout 30s)
+
+● All 3 tests pass. Adding to the preview page now.
+
+● Update(app\(public)\preview\page.tsx)
+  ⎿  Added 8 lines
+      1  // preview page for newly created UI components
+      2  import Skeleton from "@/components/Skeleton"
+      3 +import Avatar from "@/components/Avatar"                     
+      4  
+      5  export default function PreviewPage() {
+      6    return (
+     ...
+      14          <Skeleton />
+      15          <Skeleton />
+      16        </div>
+      17 +                                                            
+      18 +      <h3>Avatar</h3>                                       
+      19 +      <div style={{ display: "flex", gap: "1rem", marginTop:
+         + "1rem" }}>                                                 
+      20 +        <Avatar name="Alice" />                             
+      21 +        <Avatar name="PocketHeist" />                       
+      22 +        <Avatar name="bob" />                               
+      23 +      </div>                                                
+      24      </div>
+      25    )
+      26  }
+
+● Avatar component is done. Here's a summary:
+
+  - Initials logic: single uppercase or no PascalCase → first letter
+  uppercased; two or more uppercase letters → first two (e.g. PocketHeist →
+  PH)
+  - Styled with a circular bg-primary (purple) badge using CSS Modules
+  - Accessibility: role="img" + aria-label={name} on the wrapper
+  - All 3 tests pass
+  - Preview page updated with three examples: Alice → A, PocketHeist → PH,
+  bob → B
+
+✻ Worked for 1m 13s
+```
+
+And the component should be in this preview page:
+```
+http://localhost:3000/preview
+```
