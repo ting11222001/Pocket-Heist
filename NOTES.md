@@ -569,3 +569,46 @@ So now it can:
 
 ● Committed. Branch feature-abc is now at 0c281bf.
 ```
+
+### Bash Mode
+
+Type `!` in the Claude Code session for it to change to the shell mode directly without having to open another terminal.
+
+For example,
+```
+! git status
+```
+
+It then prints:
+```
+! git status                                                                 
+  ⎿  On branch feature-abc
+     Changes not staged for commit:
+       (use "git add <file>..." to update what will be committed)
+       (use "git restore <file>..." to discard changes in working directory)
+        modified:   NOTES.md
+```
+
+The benefit of doing this is that the output of that command gets automatically added to the chat history.
+
+It'd be great if we're running some tests, then Claude Code can easily see which tests are failing, so then I can ask CC to go back and fix it for me.
+
+Currently, in the `commit-message.md` there is this section:
+```
+## Run these commands:
+
+- git status
+- git diff --staged
+```
+
+The prompt gets sent to the model first, before anything else. The model then interprets these instructions and tells Claude Code to use the bash tool to run the bash commands, which it does. Claude Code then sends the output of those commands back to the model so it can analyse them, generate a commit message, and send that back to us.
+
+But we can shorten this process by having those bash commands run before the prompt ever gets sent to the model. We do that by entering bash mode within the prompt itself.
+
+So I can replace that section with this:
+```
+## Context:
+
+- Current git status: !`git status`
+- Current git diff: !`git diff --staged`
+```
