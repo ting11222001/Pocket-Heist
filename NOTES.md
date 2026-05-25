@@ -984,7 +984,7 @@ Trigger an edit in Claude Code, then check `hook-log.txt`. If the version number
 
 **Source:** [Claude Code GitHub Issues #3417](https://github.com/anthropics/claude-code/issues/3417), [#16377](https://github.com/anthropics/claude-code/issues/16377)
 
-###
+### Using Prettier in a Hook
 
 From the previous section, I was able to let the `jq` output the result into `tool-use.json`.
 
