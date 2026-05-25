@@ -391,6 +391,8 @@ Then, during that session, occasionally use the `/compact` command to clear up t
 
 I can use `/rewind` to rewind a session back to an earlier state. I can then decide to restore the code and the convo or either one. Use this command when I notice the convo goes off track.
 
+The latest command of doing this is also called `/undo`.
+
 ### Tools
 
 Tools are functions that allow Claude Code to do things.
@@ -568,6 +570,15 @@ So now it can:
       create mode 100644 .claude/commands/commit-message.md
 
 ● Committed. Branch feature-abc is now at 0c281bf.
+```
+
+Note that I didn't add `git add .` inside to automatically add staging files. 
+
+Reason:
+```
+Staging is a deliberate human decision. The whole point of reviewing a diff before committing is to control what goes in. Auto-staging defeats that. 
+
+Your current prompt already has a good safety note: "DO NOT auto-commit – wait for user approval." Staging deserves the same respect.
 ```
 
 ### Bash Mode
@@ -756,3 +767,64 @@ And the component should be in this preview page:
 ```
 http://localhost:3000/preview
 ```
+
+### Making a Hook
+
+Creating a hook to auto-format the code reated by CC using Prettier.
+
+Type `/hooks` to start setting up a hook. Select the `PostToolUse` event:
+```
+  Hooks
+  0 hooks configured
+                              
+  ℹ This menu is read-only. To add or modify hooks, edit settings.json 
+  directly or ask Claude. Learn more
+
+    1.  PreToolUse          Before tool execution
+  ❯ 2.  PostToolUse         After tool execution
+    3.  PostToolUseFailure  After tool execution fails
+    4.  PostToolBatch       After a batch of tool calls resolves
+  ↓ 5.  PermissionDenied    After auto mode classifier denies a tool call
+```
+
+It looks like the /hooks UI in the latest version no longer has an interactive "Add new hook" option. Instead, it tells you to edit settings.json directly.
+
+About what matter patterns out there:
+https://code.claude.com/docs/en/hooks#matcher-patterns
+
+So now in `.claude/settings.local.json`, there's this hook object:
+```
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"Hello!\""
+          }
+        ]
+      }
+    ]
+  }
+```
+
+Here is what it does:
+```
+Event: fires after Claude uses any tool.
+Matcher: filters to only Edit or Write tool calls.
+Command: runs echo "Hello!" after every file edit or write.
+```
+
+This `type` defines the hook type which can be a command in this case or a prompt.
+
+To test this PostToolUse hook, I selected one line in the Home page and ask it to change the wording.
+
+And then I use `ctrl + o` to show CC's internal thinking. For example, after the code changes output in the terminal showed it's done, then type `ctrl + o` CC will toggle more details like when this PostToolUse hook ran: 
+```
+...
+  ⎿  2 PostToolUse hooks ran
+...
+```
+
+Somehow the terminal didn't echo Hello, I changed it to print to a new log text file in my Downloads folder.
