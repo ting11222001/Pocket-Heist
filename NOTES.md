@@ -827,4 +827,167 @@ And then I use `ctrl + o` to show CC's internal thinking. For example, after the
 ...
 ```
 
-Somehow the terminal didn't echo Hello, I changed it to print to a new log text file in my Downloads folder.
+Somehow the terminal didn't echo Hello, I changed it to print to a new log text file in my Downloads folder:
+```
+"command": "echo \"Hello!\" >> C:/Users/Li-Ting/Downloads/hook-log.txt"
+```
+
+### Using jq
+
+jq is a command line JSON processing tool.
+
+When our hooks are fired, CC provideds JSON inputs to the commands we run.
+
+And that JSON input contains information about the tool CC used aor about the lifecycle event in general.
+
+In the case of the edit and write tools from previous practice, it contains things like the files that were edited, which would be really useful if we wanted to use prettier on those files.
+
+And jq allows us to easily process that JSON input and extract values from it that we might need and then output them in our command.
+
+I installed `jq` from here:
+https://jqlang.org/download/
+
+I ended up using `scoop`:
+```
+scoop install jq
+```
+
+For CLI tools like jq, Scoop is the best choice on Windows — it installs everything to C:\Users\Li-Ting\scoop\ in your own user folder, no system-wide changes, and you can uninstall the whole thing cleanly with scoop uninstall scoop if you ever want it gone.
+
+Once installed, then create the new hooks.
+
+type `/hooks`, select `PostToolUse`
+```
+  PostToolUse - Matchers
+  Input to command is JSON with fields "inputs" (tool call arguments) and 
+  "response" (tool call response).
+```
+
+Here again I can see the input to command is in JSON format.
+
+So now add a new hooks into the `Write|Edit` tool's `PostToolUse` event in the `settings.local.json`:
+```
+"command": "jq . > tool-use.json"
+```
+
+Then test if this hook works using:
+```
+❯ can you change the heading in the /login page to an h1 tag? 
+  @app/(public)/login/page.tsx  
+```
+
+It should trigger the hook - when that happens, jq should process the JSON input that Claude Code pipes into the command about the tool use and then write it to a new JSON filein the root directory.
+
+#### Troubleshooting on Windows
+
+##### Claude Code: `jq` Not Found in Hooks on Windows
+
+###### Question
+
+I installed `jq` on my Windows machine using Scoop and confirmed it works in PowerShell:
+
+```powershell
+PS C:\Users\Li-Ting\Documents\Projects\Pocket-Heist> jq --version
+jq-1.8.1
+```
+
+But when Claude Code runs a `PostToolUse` hook using `jq`, I get this error:
+
+```
+⎿  PostToolUse:Edit hook error
+⎿  Failed with non-blocking status code:
+   /usr/bin/bash: line 1: jq: command not found
+```
+
+My `settings.local.json` hook config:
+
+```json
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(*)",
+      "Bash(git init)",
+      "Bash(git switch:*)",
+      "Bash(git commit *)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"Hello!\" >> C:/Users/Li-Ting/Downloads/hook-log.txt"
+          },
+          {
+            "type": "command",
+            "command": "jq . > tool-use.json"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+Why can't Claude Code find `jq` even though it is installed?
+
+
+###### Answer
+
+This is a known Windows issue with Claude Code hooks. Claude Code hooks run inside a bash subprocess (`/usr/bin/bash`), and that subprocess has a minimal PATH. It does not include Scoop's shims folder, so `jq` is invisible to it even though PowerShell can find it.
+
+Many other Windows users have reported the same problem.
+
+**Fix: Use the full path to `jq`**
+
+Step 1. Find the exact path in PowerShell:
+
+```powershell
+(Get-Command jq).Source
+```
+
+This returns something like:
+
+```
+C:\Users\Li-Ting\scoop\shims\jq.exe
+```
+
+Step 2. Update your hook to use that full path with forward slashes:
+
+```json
+{
+  "type": "command",
+  "command": "C:/Users/Li-Ting/scoop/shims/jq.exe . > tool-use.json"
+}
+```
+
+**Why it works**
+
+By using the full path, you skip the PATH lookup entirely. The bash subprocess does not need to know where Scoop's shims are.
+
+**How to verify**
+
+Add a test hook that writes the `jq` version to your log file:
+
+```json
+{
+  "type": "command",
+  "command": "C:/Users/Li-Ting/scoop/shims/jq.exe --version >> C:/Users/Li-Ting/Downloads/hook-log.txt"
+}
+```
+
+Trigger an edit in Claude Code, then check `hook-log.txt`. If the version number appears, the path is correct.
+
+---
+
+**Source:** [Claude Code GitHub Issues #3417](https://github.com/anthropics/claude-code/issues/3417), [#16377](https://github.com/anthropics/claude-code/issues/16377)
+
+###
+
+From the previous section, I was able to let the `jq` output the result into `tool-use.json`.
+
+In this section, I will focus on the `tool_input` > `file_path` which is the location of the file which was edited. I will need to use this info to run Prettier on that file to auto-format it.
+
+This will applied to any code changes made by Claude Code.

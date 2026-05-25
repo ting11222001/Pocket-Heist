@@ -1,29 +1,4 @@
-# The final version of my local claude settings
+# Local Claude Settings
 
-In `.claude/settings.local.json`:
-```
-{
-  "permissions": {
-    "allow": [
-      "PowerShell(*)",
-      "Bash(git init)",
-      "Bash(git switch:*)",
-      "Bash(git commit *)"
-    ]
-  },
-  "hooks": {
-    "PostToolUse": [
-      {
-        "matcher": "Edit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "echo \"Hello!\" >> C:/Users/Li-Ting/Downloads/hook-log.txt"
-          }
-        ]
-      }
-    ]
-  }
-}
-
-```
+Copy `.claude/settings.local.template.json` to `.claude/settings.local.json`.
+Replace `YOUR_USERNAME` with your Windows username.
