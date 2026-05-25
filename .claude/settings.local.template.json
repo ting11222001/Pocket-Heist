@@ -1,0 +1,31 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(*)",
+      "Bash(git init)",
+      "Bash(git switch:*)",
+      "Bash(git commit *)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"Hello!\" >> C:/Users/YOUR_USERNAME/Downloads/hook-log.txt"
+          },
+          {
+            "type": "command",
+            "command": "C:/Users/YOUR_USERNAME/scoop/shims/jq.exe --version >> C:/Users/YOUR_USERNAME/Downloads/hook-log.txt"
+          },
+          {
+            "type": "command",
+            "command": "C:/Users/YOUR_USERNAME/scoop/shims/jq.exe . > tool-use.json"
+          }
+        ]
+      }
+    ]
+  }
+}
