@@ -1161,11 +1161,13 @@ did it work?
   no  → run true → exit 0  ✓
 ```
 
-Also, since I can confirm that jq is found in the bash terminal, so jq is in my PATH and I can just use jq.:
+Also, since I can confirm that jq is found in the git bash terminal, so jq is in my PATH and I can just use `jq` in my hooks commands now if I'm running CC in the git bash terminal:
 ```
 $ which jq
 /c/Users/Li-Ting/scoop/shims/jq
 ```
+
+So I don't need to use the full paths anymore e.g. `C:/Users/MY_USERNAME/scoop/shims/jq.exe`.
 
 
 #### So far I've tried all these hook commands
