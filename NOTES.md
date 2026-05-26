@@ -36,7 +36,23 @@ Run this to fix it:
 [Environment]::SetEnvironmentVariable("PATH", "$env:PATH;$env:USERPROFILE\.local\bin", [EnvironmentVariableTarget]::User)
 ```
 
-Then, check again:
+PATH is a list of folders Windows searches when we type a command.
+
+$env:PATH is my current PATH value, $env:USERPROFILE is my home folder.
+
+`[EnvironmentVariableTarget]::User` means the change applies to your account only, no admin needed.
+
+For this `"$env:PATH;$env:USERPROFILE\.local\bin"` part, it was like
+`[the current PATH] ; [the new folder we want to add]`, so it's not replacing the PATH. It's saying "keep everything that is already there, and add this new folder at the end."
+
+Also, `$env:USERPROFILE` is just a variable that holds my Windows home folder path. On my machine it resolves to `C:\Users\MY_USERNAME`.
+
+I can verify it by running:
+```powershell
+$env:USERPROFILE
+```
+
+Then, check again if it's installed successfully:
 ```powershell
 claude --version
 ```
@@ -44,6 +60,26 @@ claude --version
 It should print:
 ```powershell
 2.1.146 (Claude Code)
+```
+
+#### How to double check
+
+Run this in PowerShell to confirm the folder is in your PATH:
+```powershell
+$env:PATH -split ";"
+```
+
+That splits your PATH by semicolons and prints each folder on its own line. Look for the `.local\bin` entry.
+
+To confirm `claude` is actually inside that folder:
+```powershell
+Get-ChildItem "$env:USERPROFILE\.local\bin"
+```
+You should see `claude.exe` (or similar) listed there.
+
+And the final check, just run:
+```powershell
+claude --version
 ```
 
 ### Getting the Starter Project
@@ -665,11 +701,11 @@ It prints:
       9   })
      … +12 lines (ctrl+o to expand)
 
-● Bash(cd "C:\Users\Li-Ting\Documents\Projects\Pocket-Heist" && npx vitest
+● Bash(cd "C:\Users\MY_USERNAME\Documents\Projects\Pocket-Heist" && npx vitest
       run tests/components/Avatar.test.tsx 2>&1)
   ⎿  Error: Exit code 1
 
-      RUN  v4.0.16 C:/Users/Li-Ting/Documents/Projects/Pocket-Heist
+      RUN  v4.0.16 C:/Users/MY_USERNAME/Documents/Projects/Pocket-Heist
 
 
      ⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
@@ -685,7 +721,7 @@ It prints:
   component now.
 
 ● Bash(mkdir
-      "C:\Users\Li-Ting\Documents\Projects\Pocket-Heist\components\Avatar")
+      "C:\Users\MY_USERNAME\Documents\Projects\Pocket-Heist\components\Avatar")
   ⎿  Done
   
 ● Write(components\Avatar\Avatar.tsx)
@@ -715,9 +751,9 @@ It prints:
   ⎿  Wrote 1 lines to components\Avatar\index.ts
       1 export { default } from "./Avatar"
 
-● Bash(cd "C:\Users\Li-Ting\Documents\Projects\Pocket-Heist" && npx vitest
+● Bash(cd "C:\Users\MY_USERNAME\Documents\Projects\Pocket-Heist" && npx vitest
       run tests/components/Avatar.test.tsx 2>&1)
-  ⎿   RUN  v4.0.16 C:/Users/Li-Ting/Documents/Projects/Pocket-Heist
+  ⎿   RUN  v4.0.16 C:/Users/MY_USERNAME/Documents/Projects/Pocket-Heist
 
       ✓ tests/components/Avatar.test.tsx (3 tests) 132ms
      … +6 lines (ctrl+o to expand)
@@ -829,7 +865,7 @@ And then I use `ctrl + o` to show CC's internal thinking. For example, after the
 
 Somehow the terminal didn't echo Hello, I changed it to print to a new log text file in my Downloads folder:
 ```
-"command": "echo \"Hello!\" >> C:/Users/Li-Ting/Downloads/hook-log.txt"
+"command": "echo \"Hello!\" >> C:/Users/MY_USERNAME/Downloads/hook-log.txt"
 ```
 
 ### Using jq
@@ -852,7 +888,7 @@ I ended up using `scoop`:
 scoop install jq
 ```
 
-For CLI tools like jq, Scoop is the best choice on Windows — it installs everything to C:\Users\Li-Ting\scoop\ in your own user folder, no system-wide changes, and you can uninstall the whole thing cleanly with scoop uninstall scoop if you ever want it gone.
+For CLI tools like jq, Scoop is the best choice on Windows — it installs everything to C:\Users\MY_USERNAME\scoop\ in your own user folder, no system-wide changes, and you can uninstall the whole thing cleanly with scoop uninstall scoop if you ever want it gone.
 
 Once installed, then create the new hooks.
 
@@ -887,7 +923,7 @@ It should trigger the hook - when that happens, jq should process the JSON input
 I installed `jq` on my Windows machine using Scoop and confirmed it works in PowerShell:
 
 ```powershell
-PS C:\Users\Li-Ting\Documents\Projects\Pocket-Heist> jq --version
+PS C:\Users\MY_USERNAME\Documents\Projects\Pocket-Heist> jq --version
 jq-1.8.1
 ```
 
@@ -918,7 +954,7 @@ My `settings.local.json` hook config:
         "hooks": [
           {
             "type": "command",
-            "command": "echo \"Hello!\" >> C:/Users/Li-Ting/Downloads/hook-log.txt"
+            "command": "echo \"Hello!\" >> C:/Users/MY_USERNAME/Downloads/hook-log.txt"
           },
           {
             "type": "command",
@@ -951,7 +987,7 @@ Step 1. Find the exact path in PowerShell:
 This returns something like:
 
 ```
-C:\Users\Li-Ting\scoop\shims\jq.exe
+C:\Users\MY_USERNAME\scoop\shims\jq.exe
 ```
 
 Step 2. Update your hook to use that full path with forward slashes:
@@ -959,7 +995,7 @@ Step 2. Update your hook to use that full path with forward slashes:
 ```json
 {
   "type": "command",
-  "command": "C:/Users/Li-Ting/scoop/shims/jq.exe . > tool-use.json"
+  "command": "C:/Users/MY_USERNAME/scoop/shims/jq.exe . > tool-use.json"
 }
 ```
 
@@ -974,7 +1010,7 @@ Add a test hook that writes the `jq` version to your log file:
 ```json
 {
   "type": "command",
-  "command": "C:/Users/Li-Ting/scoop/shims/jq.exe --version >> C:/Users/Li-Ting/Downloads/hook-log.txt"
+  "command": "C:/Users/MY_USERNAME/scoop/shims/jq.exe --version >> C:/Users/MY_USERNAME/Downloads/hook-log.txt"
 }
 ```
 
@@ -991,3 +1027,187 @@ From the previous section, I was able to let the `jq` output the result into `to
 In this section, I will focus on the `tool_input` > `file_path` which is the location of the file which was edited. I will need to use this info to run Prettier on that file to auto-format it.
 
 This will applied to any code changes made by Claude Code.
+
+To test if I can grab the `.tool_input.file_path` correctly and output to `hook-log.txt` I did this first:
+```
+{
+    "type": "command",
+    "command": "C:/Users/MY_USERNAME/scoop/shims/jq.exe -r '.tool_input.file_path' >> C:/Users/MY_USERNAME/Downloads/hook-log.txt"
+}
+```
+
+Test it by first removing all the indentation in the `app/(public)/page.tsx`, and then ask CC to `make the tagline into <div>Office pranks. Zero evidence. Perfectly Petty.</div>`:
+```js
+export default function Home() {
+  return (
+    <div className="center-content">
+    <div className="page-content">
+    <h1>
+    P<Clock8 className="logo" strokeWidth={2.75} />cket Heist
+    </h1>
+    <div>Office pranks. Zero evidence.</div>
+    <p className="mt-4 text-body">
+    Turn your workplace into a playground. Pocket Heist lets you create
+    and assign sneaky little missions to your colleagues. Swap someone&apos;s
+    screensaver, hide the stapler, reorganise the snack drawer. Harmless
+    chaos, maximum fun.
+    </p>
+    <p className="mt-2 text-body">
+    Track your active heists, see what&apos;s been assigned to you, and relive
+    your greatest (expired) schemes, all in one place.
+    </p>
+    </div>
+    </div>
+  )
+}
+```
+
+I just realised that it would be easier if I just run everything in Git Bash terminal as it's the closest to the Bash terminal in Linux and macOS.
+
+When it's done, it should apply the new tagline with indentations:
+```js
+export default function Home() {
+  return (
+    <div className="center-content">
+      <div className="page-content">
+        <h1>
+          P<Clock8 className="logo" strokeWidth={2.75} />
+          cket Heist
+        </h1>
+        <div>Office pranks. Zero evidence. Perfectly Petty.</div>
+        <p className="mt-4 text-body">
+          Turn your workplace into a playground. Pocket Heist lets you create
+          and assign sneaky little missions to your colleagues. Swap
+          someone&apos;s screensaver, hide the stapler, reorganise the snack
+          drawer. Harmless chaos, maximum fun.
+        </p>
+        <p className="mt-2 text-body">
+          Track your active heists, see what&apos;s been assigned to you, and
+          relive your greatest (expired) schemes, all in one place.
+        </p>
+      </div>
+    </div>
+  );
+}
+```
+
+#### The Prettier hook command
+
+##### Original version (from tutorial)
+
+```json
+{
+  "type": "command",
+  "command": "jq -r '.tool_input.file_path' | { read fp; [[ \"$fp\" =~ \\.tsx?$ ]] && npx prettier --write \"$fp\"; }"
+}
+```
+
+This had two problems.
+
+**Problem 1: Broken pipe between hooks**
+
+Each hook command runs as a separate process. So `jq` had nothing piped into it. There was no stdin to read from.
+
+**Problem 2: Missing `|| true`**
+
+If the file was not `.ts` or `.tsx`, the regex check failed and returned exit code `1`. Claude Code treated that as a hook failure and showed an error.
+
+---
+
+#### The fixed command
+
+```json
+{
+  "type": "command",
+  "command": "fp=$(jq -r '.tool_input.file_path' tool-use.json) && [[ \"$fp\" =~ \\.tsx?$ ]] && npx prettier --write \"$fp\" || true"
+}
+```
+
+**Fix 1: Read from the saved file**
+
+The first hook saves the JSON to `tool-use.json`. So instead of piping, the second hook reads from that file directly.
+
+```bash
+# Before: nothing to read from stdin
+jq -r '.tool_input.file_path' | { read fp; ... }
+
+# After: reads from the saved file
+fp=$(jq -r '.tool_input.file_path' tool-use.json)
+```
+
+**Fix 2: `|| true` at the end**
+
+When a bash command finishes, it gives back an exit code. `0` means success. Anything else means failure.
+
+The command chain uses `&&`, which stops and returns a failure code if any step fails. If the file is not `.ts` or `.tsx`, the regex check fails and Claude Code sees an error.
+
+`|| true` means "if the whole thing failed, run `true` instead". `true` is a built-in bash command that does nothing and always returns exit code `0`.
+
+```bash
+# Without || true
+fp=$(...) && [[ "$fp" =~ \.tsx?$ ]] && npx prettier --write "$fp"
+# exits with 1 if file is not .ts or .tsx → Claude Code shows error
+
+# With || true
+fp=$(...) && [[ "$fp" =~ \.tsx?$ ]] && npx prettier --write "$fp" || true
+# always exits with 0 → Claude Code stays happy
+```
+
+Think of it like this:
+
+```
+did it work?
+  yes → exit 0  ✓
+  no  → run true → exit 0  ✓
+```
+
+Also, since I can confirm that jq is found in the bash terminal, so jq is in my PATH and I can just use jq.:
+```
+$ which jq
+/c/Users/Li-Ting/scoop/shims/jq
+```
+
+
+#### So far I've tried all these hook commands
+
+```json
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(*)",
+      "Bash(git init)",
+      "Bash(git switch:*)",
+      "Bash(git commit *)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"Hello!\" >> C:/Users/YOUR_USERNAME/Downloads/hook-log.txt"
+          },
+          {
+            "type": "command",
+            "command": "jq --version >> C:/Users/YOUR_USERNAME/Downloads/hook-log.txt"
+          },
+          {
+            "type": "command",
+            "command": "jq . > tool-use.json"
+          },
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.file_path' >> C:/Users/YOUR_USERNAME/Downloads/hook-log.txt"
+          },
+          {
+            "type": "command",
+            "command": "fp=$(jq -r '.tool_input.file_path' tool-use.json) && [[ \"$fp\" =~ \\.tsx?$ ]] && npx prettier --write \"$fp\" || true"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
