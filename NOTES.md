@@ -1112,7 +1112,6 @@ Each hook command runs as a separate process. So `jq` had nothing piped into it.
 
 If the file was not `.ts` or `.tsx`, the regex check failed and returned exit code `1`. Claude Code treated that as a hook failure and showed an error.
 
----
 
 #### The fixed command
 
@@ -1169,6 +1168,86 @@ $ which jq
 
 So I don't need to use the full paths anymore e.g. `C:/Users/MY_USERNAME/scoop/shims/jq.exe`.
 
+#### `[[ ]]`, `=~`, and `--write`
+
+**`[[ ]]`**
+
+It is a bash test block. It checks if a condition is true or false and returns exit code `0` for true, `1` for false.
+
+The double bracket version `[[ ]]` is the modern bash version. It is safer and supports regex with `=~`.
+
+```bash
+[[ "$fp" =~ \.tsx?$ ]]
+# checks if $fp matches the pattern
+```
+
+**`=~`**
+
+It means "matches this regex pattern". It only works inside `[[ ]]`.
+
+```bash
+[[ "$fp" =~ \.tsx?$ ]]
+```
+
+Breaking down the pattern `\.tsx?$`:
+- `\.` means a literal dot
+- `ts` matches the letters "ts"
+- `x?` means "x is optional"
+- `$` means end of the string
+
+So it matches files ending in `.ts` or `.tsx`.
+
+**`--write`**
+
+It is a flag for the `npx prettier` command. It tells Prettier to save the formatted result back into the same file.
+
+Without `--write`, Prettier just prints the formatted code to the terminal but does not change the file.
+
+```bash
+npx prettier --write "$fp"
+# formats the file and saves it
+```
+
+#### Variable assignment with `$()` and `jq`
+
+**`fp=$(...)`**
+
+This assigns a value to a variable called `fp`.
+
+The `$(...)` part runs a command and captures its output as a string.
+
+So `fp=$(some command)` means "run this command and store the result in `fp`".
+
+**`jq -r '.tool_input.file_path' tool-use.json`**
+
+This reads the file `tool-use.json` and extracts a value from it.
+
+- `jq` is a tool for reading JSON files
+- `-r` means "raw output". Without it, jq wraps strings in quotes. With it, you get plain text.
+- `'.tool_input.file_path'` is the path to the value inside the JSON. It means "go into `tool_input`, then get `file_path`"
+- `tool-use.json` is the file to read from
+
+So if `tool-use.json` looks like this:
+
+```json
+{
+  "tool_input": {
+    "file_path": "app/page.tsx"
+  }
+}
+```
+
+Then `jq -r '.tool_input.file_path' tool-use.json` returns:
+
+```
+app/page.tsx
+```
+
+And the whole line stores that into `fp`:
+
+```bash
+fp=app/page.tsx
+```
 
 #### So far I've tried all these hook commands
 
