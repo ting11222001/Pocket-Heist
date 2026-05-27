@@ -1,5 +1,9 @@
 # NOTES
 
+## References
+
+Inspired by the [Claude Code Masterclass](https://www.youtube.com/c/TheNetNinja) by Net Ninja.
+
 ## Getting Set Up
 
 ### Installing Claude Code
