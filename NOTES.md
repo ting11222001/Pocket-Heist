@@ -1296,3 +1296,7 @@ fp=app/page.tsx
   }
 }
 ```
+
+## Plan Mode & Specs
+
+### A Spec Driven Workflow
