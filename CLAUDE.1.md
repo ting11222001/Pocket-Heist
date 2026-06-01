@@ -19,9 +19,9 @@ npm run start      # serve production build
 ### Testing
 
 ```bash
-npm run test                                             # Vitest (watch mode)
-npx vitest run                                           # single run, no watch
-npx vitest run tests/components/Navbar.test.tsx          # run a single test file
+npm run test                                          # Vitest (watch mode)
+npx vitest run                                        # single run, no watch
+npx vitest run tests/components/Navbar.test.tsx       # run a single test file
 ```
 
 ### Linting
@@ -59,7 +59,7 @@ Multi-layered approach:
 
 **a) Global theme** — `app/globals.css` owns all design tokens (colors, font) inside a Tailwind v4 `@theme {}` block, plus base typography rules and shared utility classes via `@apply`. This is the single source of truth for the design system.
 
-**b) Component styles** — each component gets its own CSS Module (e.g. `Navbar.module.css`) for scoped styles, using `@reference` to access the global theme and `@apply` to compose utility classes.
+**b) Component styles** — each component gets its own CSS Module (e.g. `Navbar.module.css`) for scoped styles, also using `@reference` to access the global theme and `@apply` to compose utility classes from the global theme.
 
 Avoid applying more than one Tailwind utility class directly in JSX. If an element needs multiple classes, define a custom class in the relevant CSS file using `@apply`.
 
@@ -68,29 +68,20 @@ Avoid applying more than one Tailwind utility class directly in JSX. If an eleme
 Each component lives in its own folder under `components/` with three files:
 
 ```
-components/ComponentName/
-  ComponentName.tsx
-  ComponentName.module.css
-  index.ts                  # re-exports the default export for clean imports
+components/Navbar/
+  Navbar.tsx
+  Navbar.module.css
+  index.ts          # re-exports the default export for clean imports
+
+components/Skeleton/
+  Skeleton.tsx
+  Skeleton.module.css
+  index.ts
 ```
-
-Current components: `Navbar`, `Skeleton`, `Avatar`, `Button`, `Input`, `PasswordInput`, `LoginForm`, `SignupForm`.
-
-`LoginForm` and `SignupForm` are page-level form components that compose `Input`, `PasswordInput`, and `Button`. They handle their own local state and currently log to the console on submit.
 
 ### Testing Setup
 
 Tests live in `tests/components/`. Vitest runs in a jsdom environment with `@testing-library/jest-dom` matchers available globally (configured in `vitest.setup.ts`). The `vite-tsconfig-paths` plugin makes the `@/` alias work in tests without extra configuration.
-
-New components should follow the TDD pattern: write the test file first, run it to confirm it fails, then implement the component.
-
-## Feature Development Workflow
-
-New features follow a three-stage spec-driven process before any code is written.
-
-- Stage 1 (Spec) — Run `/spec <short idea>` to kick off a new feature. E.g. `_specs/authentication-forms.md` contains login/signup form UI.
-- Stage 2 (Plan) — Run plan mode and save the plan in the `_plans` older with the slug name. E.g. `_plans/authentication-forms.md`.
-- Stage 3 (Implement) — switch to `Opus`, reference the plan with @.
 
 ## Coding Preferences
 

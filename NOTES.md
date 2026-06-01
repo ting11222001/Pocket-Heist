@@ -1403,3 +1403,15 @@ Then type this Claude Code:
 ```
 Can you implement this plan @_plans/authentication-forms.md  
 ```
+
+Once done, review the code and see if I need to /rewind i.e. rollback or go ahead with the current changes.
+
+I did a refactor plan this time to see how it feels when creating a plan myself. 
+
+### Updating the CLAUDE.md File
+
+Time to update the CLAUDE.md file after all these changes. 
+
+Switch back to Sonnet.
+
+The tutorial suggested to rename the existing one to `CLAUDE.1.md` and run `/init` to get a new `CLAUDE.md`.
