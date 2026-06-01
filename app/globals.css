@@ -53,3 +53,32 @@ svg.logo {
 .form-title {
   @apply text-center text-xl font-bold;
 }
+
+/* auth forms */
+.auth-form {
+  @apply flex flex-col gap-4 mt-6;
+}
+.form-group {
+  @apply flex flex-col gap-1;
+}
+.form-group label {
+  @apply text-sm font-semibold text-heading;
+}
+.form-input {
+  @apply w-full bg-lighter text-heading px-3 py-2 rounded-lg border border-light outline-none focus:border-primary transition-colors duration-200;
+}
+.password-field {
+  @apply relative flex items-center;
+}
+.password-field .form-input {
+  @apply pr-10;
+}
+.password-toggle {
+  @apply absolute right-3 text-body hover:text-heading transition-colors duration-200 cursor-pointer;
+}
+.form-switch {
+  @apply text-center text-sm text-body mt-2;
+}
+.form-switch a {
+  @apply text-primary hover:text-secondary transition-colors duration-200;
+}

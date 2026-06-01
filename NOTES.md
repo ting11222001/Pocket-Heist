@@ -1379,3 +1379,27 @@ Then the plan will be saved in `_plans/authentication-forms.md`.
 Suggested that I should spend time reviewing this planned markdown file too.
 
 By this point, before letting CC go ahead to implement, commit now so that later if I don't like the implementation, then I can let it rewind.
+
+### Extended Thinking
+
+So far I've been using Sonnet model to make small code changes, create a spec and also plan the feature.
+
+However, when implementing the plan, I can switch the model to Opus.
+
+Opus model seems very good at following the plan.
+
+Run:
+```
+/model
+```
+
+Hit Enter, and select the model I want.
+
+And extended thinking is good for muli-step problems but it consumers more tokens. It also gives alternative solutions if it sees any holes in the plan.
+
+I can also type `/config` to turn off the Thinking mode. But it could eat up tokens quickly with the Opus model.
+
+Then type this Claude Code:
+```
+Can you implement this plan @_plans/authentication-forms.md  
+```
