@@ -1349,3 +1349,33 @@ In `_specs/authentication-forms.md`, there will be content filled and this secti
 ```
 
 Suggested that I should spend more time on this spec markdown file before moving on to the Plan Mode for Claude Code to start planning how to implement it technically.
+
+### Plan mode
+
+Plan mode is a read-only mode for creaitng implemnetation plans for new features.
+
+When we use plan mode, Claude Code spins up a sub agent to conduct research and gather info about the codebase. Then, that sub agent will provide the info back to Claude Code main agent to generate a plan markdown file, which includes the instructions to implment that plan like code examples, file structures, etc. 
+
+`shift + tab` can turn on the CC's plan mode. It will show:
+```
+⏸ plan mode on
+```
+
+Then write:
+```
+plan the feature described in this spec 
+  @_specs/authentication-forms.md  
+```
+
+Look over the plan myself first, instead of letting it edit right away.
+
+So when it asked `Would you like to proceed?`, I will tell it:
+```
+No, just save the plan to the _plans folder for later
+```
+
+Then the plan will be saved in `_plans/authentication-forms.md`.
+
+Suggested that I should spend time reviewing this planned markdown file too.
+
+By this point, before letting CC go ahead to implement, commit now so that later if I don't like the implementation, then I can let it rewind.
