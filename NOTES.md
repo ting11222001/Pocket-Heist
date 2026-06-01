@@ -1328,3 +1328,24 @@ In `.claude/commands/spec.md`, specify how the high level spec should look like.
 #### Create the spec template file
 
 Create `_specs` folder to put the `template.md` for the spec templates.
+
+### Creating a New Spec
+
+Add a form in the signup page and a link to switch between login and signup.
+
+Only the frontend look for now.
+
+In Claude Code, run the following to start using this `/spec` command:
+```
+/spec Let's spec the authentication forms on the /login and /signup pages. They need email and password fields, a 'hide password' icon, and a submit button (signup/login). The forms should only log details to the console for now, when they are submitted. We should be able to easily switch between the two forms.
+```
+
+In `_specs/authentication-forms.md`, there will be content filled and this section my answers to CC's questions are as below:
+```
+## Open Questions
+
+- Should email and password fields share a reusable `AuthForm` component, or remain separate per-page implementations? Remain separate per-page implementations for now.
+- Is there a preferred icon from Lucide React for the show/hide password toggle? No.
+```
+
+Suggested that I should spend more time on this spec markdown file before moving on to the Plan Mode for Claude Code to start planning how to implement it technically.
