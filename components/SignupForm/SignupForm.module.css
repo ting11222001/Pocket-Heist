@@ -1,0 +1,14 @@
+@reference "../../app/globals.css";
+
+.form {
+  @apply flex flex-col gap-4 mt-6;
+}
+.error {
+  @apply text-sm text-error;
+}
+.switch {
+  @apply text-center text-sm text-body mt-2;
+}
+.switch a {
+  @apply text-primary hover:text-secondary transition-colors duration-200;
+}
