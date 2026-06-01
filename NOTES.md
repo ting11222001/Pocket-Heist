@@ -1324,3 +1324,7 @@ Inspired by SpecKit.
 ### Making a /spec Command
 
 In `.claude/commands/spec.md`, specify how the high level spec should look like. 
+
+#### Create the spec template file
+
+Create `_specs` folder to put the `template.md` for the spec templates.
