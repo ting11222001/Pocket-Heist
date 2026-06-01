@@ -1300,3 +1300,27 @@ fp=app/page.tsx
 ## Plan Mode & Specs
 
 ### A Spec Driven Workflow
+
+```
+High-level Spec          Custom /spec command
+      |
+      ▼
+Technical Plan           Planning mode
+      |
+      ▼
+Implement Feature        Extended thinking + Opus
+      |
+      ▼
+Code Review
+```
+
+Having this high level, non technical specification for any new feature at heart, then we create a detailed technical development plan based on that spec, and then finally we use that plan to implement the feature.
+
+This workflow makes any guesswork or incorrect assumptions from the Claude Code to the minimum.
+
+Inspired by SpecKit.
+
+
+### Making a /spec Command
+
+In `.claude/commands/spec.md`, specify how the high level spec should look like. 
