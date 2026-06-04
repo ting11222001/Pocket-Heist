@@ -9,33 +9,39 @@ Inspired by the [Claude Code Masterclass](https://www.youtube.com/c/TheNetNinja)
 ### Installing Claude Code
 
 Open PowerShell and run:
+
 ```powershell
 irm https://claude.ai/install.ps1 | iex
 ```
 
 It will print:
+
 ```powershell
 Setting up Claude Code...
 ```
 
 Once done:
+
 ```powershell
 ✔ Claude Code successfully installed!
 ```
 
 Verify the install
+
 ```powershell
 claude --version
 ```
 
 Somehow mine showed:
+
 ```powershell
-claude : The term 'claude' is not recognized as the name of a cmdlet, function, script file, or operable program. 
+claude : The term 'claude' is not recognized as the name of a cmdlet, function, script file, or operable program.
 ```
 
 The install worked, but PowerShell doesn't know where to find claude yet.
 
 Run this to fix it:
+
 ```powershell
 [Environment]::SetEnvironmentVariable("PATH", "$env:PATH;$env:USERPROFILE\.local\bin", [EnvironmentVariableTarget]::User)
 ```
@@ -52,16 +58,19 @@ For this `"$env:PATH;$env:USERPROFILE\.local\bin"` part, it was like
 Also, `$env:USERPROFILE` is just a variable that holds my Windows home folder path. On my machine it resolves to `C:\Users\MY_USERNAME`.
 
 I can verify it by running:
+
 ```powershell
 $env:USERPROFILE
 ```
 
 Then, check again if it's installed successfully:
+
 ```powershell
 claude --version
 ```
 
 It should print:
+
 ```powershell
 2.1.146 (Claude Code)
 ```
@@ -69,6 +78,7 @@ It should print:
 #### How to double check
 
 Run this in PowerShell to confirm the folder is in your PATH:
+
 ```powershell
 $env:PATH -split ";"
 ```
@@ -76,12 +86,15 @@ $env:PATH -split ";"
 That splits your PATH by semicolons and prints each folder on its own line. Look for the `.local\bin` entry.
 
 To confirm `claude` is actually inside that folder:
+
 ```powershell
 Get-ChildItem "$env:USERPROFILE\.local\bin"
 ```
+
 You should see `claude.exe` (or similar) listed there.
 
 And the final check, just run:
+
 ```powershell
 claude --version
 ```
@@ -103,6 +116,7 @@ There are `components` and `tests` folder that will guide Claude Code to put rel
 It's better to flesh out the structure myself so that Claude Code can build on top of it.
 
 Launch Claude Code at the project root:
+
 ```
 claude
 ```
@@ -112,144 +126,156 @@ Type `/ide` to make it connet to and IDE. In this case, select VS Code.
 ### Asking Claude Code Questions
 
 Type in CC:
+
 ```
 analyse the codebase and provide a summary of this project,
   outlining any frameworks, archietecture or main features.
 ```
 
 Result:
+
 ```markdown
 Here's a summary of the Pocket Heist project:
 
-  ---
-  Project Summary
+---
 
-  Pocket Heist — "Tiny missions. Big office mischief." — is a web application
-  for assigning and tracking small pranks/missions among office colleagues.
+Project Summary
 
-  ---
-  Tech Stack & Frameworks
+Pocket Heist — "Tiny missions. Big office mischief." — is a web application
+for assigning and tracking small pranks/missions among office colleagues.
 
-  ┌───────────┬────────────────────────────────┐
-  │   Layer   │           Technology           │
-  ├───────────┼────────────────────────────────┤
-  │ Framework │ Next.js 16 (App Router)        │
-  ├───────────┼────────────────────────────────┤
-  │ Language  │ TypeScript                     │
-  ├───────────┼────────────────────────────────┤
-  │ Styling   │ Tailwind CSS v4 + CSS Modules  │
-  ├───────────┼────────────────────────────────┤
-  │ Icons     │ Lucide React                   │
-  ├───────────┼────────────────────────────────┤
-  │ Testing   │ Vitest + React Testing Library │
-  └───────────┴────────────────────────────────┘
+---
 
-  ---
-  Architecture
+Tech Stack & Frameworks
 
-  Next.js App Router with route groups for access control:
+┌───────────┬────────────────────────────────┐
+│ Layer │ Technology │
+├───────────┼────────────────────────────────┤
+│ Framework │ Next.js 16 (App Router) │
+├───────────┼────────────────────────────────┤
+│ Language │ TypeScript │
+├───────────┼────────────────────────────────┤
+│ Styling │ Tailwind CSS v4 + CSS Modules │
+├───────────┼────────────────────────────────┤
+│ Icons │ Lucide React │
+├───────────┼────────────────────────────────┤
+│ Testing │ Vitest + React Testing Library │
+└───────────┴────────────────────────────────┘
 
-  app/
-  ├── (public)/          # Unauthenticated routes
-  │   ├── page.tsx       # Splash/home page
-  │   ├── login/
-  │   ├── signup/
-  │   └── preview/
-  └── (dashboard)/       # Authenticated routes
-      └── heists/
-          ├── page.tsx        # Heist list
-          ├── create/         # Create a heist
-          └── [id]/           # View a heist (dynamic route)
+---
 
-  Route groups (public) and (dashboard) split layout concerns — the dashboard
-  layout includes a Navbar, the public layout does not.
+Architecture
 
-  ---
-  Current State
+Next.js App Router with route groups for access control:
 
-  This is a starter/skeleton project — pages have placeholder structure but no
-   real logic yet:
+app/
+├── (public)/ # Unauthenticated routes
+│ ├── page.tsx # Splash/home page
+│ ├── login/
+│ ├── signup/
+│ └── preview/
+└── (dashboard)/ # Authenticated routes
+└── heists/
+├── page.tsx # Heist list
+├── create/ # Create a heist
+└── [id]/ # View a heist (dynamic route)
 
-  - Heists list page has sections for Active, Assigned, and Expired heists (no
-   data)
-  - Create Heist page has a form title placeholder
-  - Login/Signup pages are empty shells
-  - Navbar is the only complete component, with routing to /heists and
+Route groups (public) and (dashboard) split layout concerns — the dashboard
+layout includes a Navbar, the public layout does not.
+
+---
+
+Current State
+
+This is a starter/skeleton project — pages have placeholder structure but no
+real logic yet:
+
+- Heists list page has sections for Active, Assigned, and Expired heists (no
+  data)
+- Create Heist page has a form title placeholder
+- Login/Signup pages are empty shells
+- Navbar is the only complete component, with routing to /heists and
   /heists/create
-  - A dark theme is defined in globals.css with a purple/pink color palette
+- A dark theme is defined in globals.css with a purple/pink color palette
 
-  The test suite has one test file covering the Navbar component
-  (Navbar.test.tsx).
-
+The test suite has one test file covering the Navbar component
+(Navbar.test.tsx).
 ```
 
 Then I add to prompt again:
+
 ```
-what are the main features (UI only)? and includes what Scripts other than  
-  npm run dev? and what frontend framework it's using and the version?  
+what are the main features (UI only)? and includes what Scripts other than
+  npm run dev? and what frontend framework it's using and the version?
 ```
 
 To see these info:
+
 ```markdown
 Main UI Features
-  - Splash/home page with a styled logo (Clock8 icon embedded in "Pocket
+
+- Splash/home page with a styled logo (Clock8 icon embedded in "Pocket
   Heist" wordmark)
-  - Login and Signup pages (shell layout only)
-  - Preview page (public, no auth required)
-  - Heist list dashboard — three sections: Active Heists, Assigned Heists,
+- Login and Signup pages (shell layout only)
+- Preview page (public, no auth required)
+- Heist list dashboard — three sections: Active Heists, Assigned Heists,
   Expired Heists
-  - Create Heist form page
-  - Individual Heist detail page (dynamic route /heists/[id])
-  - Persistent Navbar on dashboard pages with brand header and "Create Heist"
+- Create Heist form page
+- Individual Heist detail page (dynamic route /heists/[id])
+- Persistent Navbar on dashboard pages with brand header and "Create Heist"
   nav link
-  - Dark theme with purple/pink accent palette (Inter font)
+- Dark theme with purple/pink accent palette (Inter font)
 
-  ---
-  Available Scripts (package.json)
+---
 
-  ┌───────────────┬────────────────────────────────┐
-  │    Script     │            Command             │
-  ├───────────────┼────────────────────────────────┤
-  │ npm run build │ next build                     │
-  ├───────────────┼────────────────────────────────┤
-  │ npm run start │ next start (production server) │
-  ├───────────────┼────────────────────────────────┤
-  │ npm run lint  │ eslint                         │
-  ├───────────────┼────────────────────────────────┤
-  │ npm run test  │ vitest                         │
-  └───────────────┴────────────────────────────────┘
+Available Scripts (package.json)
 
-  ---
-  Frontend Framework
+┌───────────────┬────────────────────────────────┐
+│ Script │ Command │
+├───────────────┼────────────────────────────────┤
+│ npm run build │ next build │
+├───────────────┼────────────────────────────────┤
+│ npm run start │ next start (production server) │
+├───────────────┼────────────────────────────────┤
+│ npm run lint │ eslint │
+├───────────────┼────────────────────────────────┤
+│ npm run test │ vitest │
+└───────────────┴────────────────────────────────┘
 
-  Next.js ^16.0.7 with React 19.2.0, using the App Router pattern introduced
-  in Next.js 13+.
+---
+
+Frontend Framework
+
+Next.js ^16.0.7 with React 19.2.0, using the App Router pattern introduced
+in Next.js 13+.
 ```
-
 
 Then, I prompt:
+
 ```
- what about the styling?        
+ what about the styling?
 ```
 
 Result:
+
 ```markdown
 ● Tailwind CSS v4 (^4) — configured via @tailwindcss/postcss as a PostCSS
-  plugin.
+plugin.
 
-  Used in two ways:
+Used in two ways:
 
-  1. Utility classes directly in JSX (e.g. flex, text-4xl, font-bold)
-  2. @apply directives in globals.css for reusable layout classes like
-  .page-content, .center-content, .form-title
+1. Utility classes directly in JSX (e.g. flex, text-4xl, font-bold)
+2. @apply directives in globals.css for reusable layout classes like
+   .page-content, .center-content, .form-title
 
-  Custom theme defined in globals.css using Tailwind v4's @theme block:
-  - Colors: primary (#C27AFF purple), secondary (#FB64B6 pink), dark/light
+Custom theme defined in globals.css using Tailwind v4's @theme block:
+
+- Colors: primary (#C27AFF purple), secondary (#FB64B6 pink), dark/light
   backgrounds, success/error states
-  - Font: Inter (Google Fonts)
+- Font: Inter (Google Fonts)
 
-  CSS Modules for component-scoped styles — the Navbar uses Navbar.module.css
-  for its layout styles.
+CSS Modules for component-scoped styles — the Navbar uses Navbar.module.css
+for its layout styles.
 ```
 
 ### Making Code Changes
@@ -257,16 +283,17 @@ Result:
 Till now, the project knowledge is stored in the current CC's session until the context window is filled up.
 
 Type:
+
 ```
-can you add some dummy intro text to this page?  
+can you add some dummy intro text to this page?
 ```
 
 It asked which page, and then I allowed edits (e.g. adding some new texts) on the `app/(public)/page.tsx` which is the home page.
 
-
 ### Conversation Management
 
 To quit the session:
+
 ```
 /exit
 ```
@@ -276,6 +303,7 @@ It will turn back to the regular terminal.
 Then, when I type `claude` again, it will open a whole new session with no previous context.
 
 I can do this to resume the previous chat session:
+
 ```
 claude -r
 ```
@@ -285,6 +313,7 @@ which will list the previous sessions for me to choose.
 ### Models and Usage
 
 Type this to change the model:
+
 ```
 /model
 ```
@@ -298,6 +327,7 @@ Each model has different rates of eating up my token quotas. Go to Settings > Us
 ### Slash Commands
 
 Some common ones by just typing `/`:
+
 ```
 /doctor
 /usage
@@ -310,6 +340,7 @@ Some common ones by just typing `/`:
 ### The CLAUDE.md File
 
 Type:
+
 ```
 /init
 ```
@@ -317,6 +348,7 @@ Type:
 Use it on an existing project, so Claude Code doesn't need to keep scanning.
 
 I also did these to match what the tutorial's CLAUDE.md looks like:
+
 ```
 In the CLAUDE.md, under Architecture, there should be: 1) TechStack 2) Route organisation from Next.js 3) Importt Aliases 4) Styling
   Architecutre using the multi-layered approach which includes a) global theme and b) component style 5) Component Structure 6) Testing setup 7) Additional Coding Preferences
@@ -328,18 +360,20 @@ Use the git switch -c command to switch to new branches, not git checkout.
 ```
 
 And then I added:
+
 ```
 In the CLAUDE.md, under the commands section there should be 1) Development 2) Testing 3) Linting
 ```
 
 And then I added:
+
 ```
 In the CLAUDE.md, add a Project Overview section on top of the Commands section
 ```
 
 Till now I will leave the CLAUDE.md as it is, but I can always come back to update it when the project is updated.
 
-This CLAUDE.md is at the project scope level. This is project specific. 
+This CLAUDE.md is at the project scope level. This is project specific.
 
 I can create a claude file that stores informations across all my projects in my user directory on my machine later on, which is called the user scope. Can look it up later.
 
@@ -348,12 +382,14 @@ I can create a claude file that stores informations across all my projects in my
 If I want to add a footer component with the copyright content on the splash page, then I should make it very explicit, by adding the splash page's path to the context with `@` symbol.
 
 Just type `@page` then claude code will have a select menu from the code base:
+
 ```
-Make a new footer component with a copyright notice and add it only to 
+Make a new footer component with a copyright notice and add it only to
   the splash page and auth pages. @app/(public)/page.tsx
 ```
 
 Or if I want to do this:
+
 ```
 Can you create a btn class and styles using the theme colors in @app/globals.css. Then apply that class to the link in the navbar.
 ```
@@ -369,6 +405,7 @@ I can also use `@` in the CLAUDE.md to manually add files into context of the pr
 It's useful when I want to add a design reference for a new component.
 
 For example:
+
 ```
 Can you make a new Skeleton UI component for later use? Base the design on the following image, but use colours to match this project. @public/skeleton.png
 ```
@@ -376,25 +413,28 @@ Can you make a new Skeleton UI component for later use? Base the design on the f
 And ideally in CLAUDE.md > Component Structure section, the new component should be updated into that file structure chart. -> need to check on this later.
 
 Added the skeleton component in the preview page:
+
 ```
-can you add this skeleton component to the preview page in a grid layout,  
-  so we can preview it? 
+can you add this skeleton component to the preview page in a grid layout,
+  so we can preview it?
 ```
 
 ### The Context Window
 
 Context Window:
+
 - 200K tokens ~ 500 pages of text
 - `/compact` runs when at 95% capacity
 
 Run `/context` first and I see:
+
 ```
- /context 
+ /context
   ⎿  Context Usage
      ⛁ ⛁ ⛀ ⛀ ⛀   Sonnet 4.6
      ⛁ ⛁ ⛁ ⛁ ⛶   claude-sonnet-4-6
      ⛶ ⛶ ⛶ ⛶ ⛶   57.2k/200k tokens (29%)
-     ⛶ ⛶ ⛶ ⛶ ⛶ 
+     ⛶ ⛶ ⛶ ⛶ ⛶
      ⛶ ⛝ ⛝ ⛝ ⛝   Estimated usage by category
                  ⛁ System prompt: 6.6k tokens (3.3%)
                  ⛁ System tools: 13.4k tokens (6.7%)
@@ -406,13 +446,14 @@ Run `/context` first and I see:
 ```
 
 Run `/compact`, and then run `/context` to check if the free space has increased:
+
 ```
- /context 
+ /context
   ⎿  Context Usage
      ⛁ ⛁ ⛀ ⛀ ⛀   Sonnet 4.6
      ⛁ ⛶ ⛶ ⛶ ⛶   claude-sonnet-4-6
      ⛶ ⛶ ⛶ ⛶ ⛶   29.2k/200k tokens (15%)
-     ⛶ ⛶ ⛶ ⛶ ⛶ 
+     ⛶ ⛶ ⛶ ⛶ ⛶
      ⛶ ⛝ ⛝ ⛝ ⛝   Estimated usage by category
                  ⛁ System prompt: 6.6k tokens (3.3%)
                  ⛁ System tools: 13.4k tokens (6.7%)
@@ -442,6 +483,7 @@ I just need to type my commands i.e. the prompts, and the prompts got sent to th
 ### Permissions & Allowed Tools
 
 For example, if I want to run:
+
 ```
 Search the next.js docs to see how to implememnt dynamic routes
 ```
@@ -451,6 +493,7 @@ and I want to grant permissions to the `Web Search` tool in this project across 
 (Note that when allowing Claude Code to edit when it asks then the permission only lasts in that session.)
 
 Then, this file will be generated:
+
 ```
 .claude > settings.local.json
 ```
@@ -458,6 +501,7 @@ Then, this file will be generated:
 To add allowed tools, run `/permissions`.
 
 I can be specific:
+
 ```
  Add allow permission rule
 
@@ -467,6 +511,7 @@ I can be specific:
 ```
 
 For example, `Bash(git init)` and save this rule to `.claude/settings.local.json` which won't be added to the version control:
+
 ```
 Where should this rule be saved?
   ❯ 1. Project settings (local)  Saved in .claude\settings.local.json
@@ -475,6 +520,7 @@ Where should this rule be saved?
 ```
 
 Then, the `settings.local.json` will become:
+
 ```
 {
   "permissions": {
@@ -487,24 +533,28 @@ Then, the `settings.local.json` will become:
 ```
 
 Then, test if this permission works by running this prompt:
+
 ```
-initialise a new git repo for this project                                 
+initialise a new git repo for this project
 ```
 
 It should not ask for permission - yes!
 
 And it prints:
+
 ```
 ● The project already has a git repository initialized — the session started
-  with branch main and several commits. No action needed. 
+  with branch main and several commits. No action needed.
 ```
 
 And test if other Bash command is still asking for permissions:
+
 ```
 can you switch to a new branch called feature-abc
 ```
 
 Which it does ask for permissions for this Bash command, just as expected:
+
 ```
 Bash command
 
@@ -520,6 +570,7 @@ Bash command
 ```
 
 Then, I can add this into permissions by running `/permissions`, and type:
+
 ```
 Bash(git switch:*)
 ```
@@ -527,9 +578,10 @@ Bash(git switch:*)
 Bascially adding a wildcard after the `switch`.
 
 This time, when I do the same prompt and it's now able to run the Bash command (switch) without asking for permissions:
+
 ```
 
-❯ can you switch to a new branch called feature-abc                          
+❯ can you switch to a new branch called feature-abc
 
 ● Bash(git switch -c feature-abc)
   ⎿  Switched to a new branch 'feature-abc'
@@ -542,6 +594,7 @@ This time, when I do the same prompt and it's now able to run the Bash command (
 For example, `/component` which is used whenever I want to create a component etc.
 
 Create a `commands` folder inside the `.claude` folder (this one should be at the project root) and the actual instruction for the command `/commit-message`:
+
 ```
 .claude/commands/commit-message.md
 ```
@@ -551,6 +604,7 @@ I added those sections in the markdown and list out `allowed-tools` explicitly f
 Remember to exit the current CC session to allow it to pick up the new commands.
 
 To test if this new command works, I had to add code changed files to "staged" first and then in CC run `/commit-message`:
+
 ```
  ---
   Summary of staged changes:
@@ -574,16 +628,18 @@ To test if this new command works, I had to add code changed files to "staged" f
 
   ---
   Shall I go ahead and commit with this message?
-  ```
+```
 
-  Then, I responded:
-  ```
-  yes, proceed
-  ```
+Then, I responded:
 
-  It somehow still asked if it can commit despite that I've added the permission in the command file.
+```
+yes, proceed
+```
+
+It somehow still asked if it can commit despite that I've added the permission in the command file.
 
 So I just double checked:
+
 ```
 Why allowed-tools in the command file didn't prevent it
 
@@ -591,6 +647,7 @@ The frontmatter allowed-tools only grants permission for tools used within that 
 ```
 
 And I chose `yes, and don't ask again for git commit *`, then here in the `.claude/settings.local.json` is updated:
+
 ```
 {
   "allowedTools": [
@@ -600,23 +657,25 @@ And I chose `yes, and don't ask again for git commit *`, then here in the `.clau
 ```
 
 So now it can:
-  ```
-  ● Bash(git commit -m "$(cat <<'EOF'
-      📝 docs: add custom /commit-message slash command and document how it
-      works…)
-  ⎿  [feature-abc 0c281bf] 📝 docs: add custom /commit-message slash com
-     mand and document how it works
-      2 files changed, 57 insertions(+), 1 deletion(-)
-      create mode 100644 .claude/commands/commit-message.md
+
+```
+● Bash(git commit -m "$(cat <<'EOF'
+    📝 docs: add custom /commit-message slash command and document how it
+    works…)
+⎿  [feature-abc 0c281bf] 📝 docs: add custom /commit-message slash com
+   mand and document how it works
+    2 files changed, 57 insertions(+), 1 deletion(-)
+    create mode 100644 .claude/commands/commit-message.md
 
 ● Committed. Branch feature-abc is now at 0c281bf.
 ```
 
-Note that I didn't add `git add .` inside to automatically add staging files. 
+Note that I didn't add `git add .` inside to automatically add staging files.
 
 Reason:
+
 ```
-Staging is a deliberate human decision. The whole point of reviewing a diff before committing is to control what goes in. Auto-staging defeats that. 
+Staging is a deliberate human decision. The whole point of reviewing a diff before committing is to control what goes in. Auto-staging defeats that.
 
 Your current prompt already has a good safety note: "DO NOT auto-commit – wait for user approval." Staging deserves the same respect.
 ```
@@ -626,13 +685,15 @@ Your current prompt already has a good safety note: "DO NOT auto-commit – wait
 Type `!` in the Claude Code session for it to change to the shell mode directly without having to open another terminal.
 
 For example,
+
 ```
 ! git status
 ```
 
 It then prints:
+
 ```
-! git status                                                                 
+! git status
   ⎿  On branch feature-abc
      Changes not staged for commit:
        (use "git add <file>..." to update what will be committed)
@@ -645,6 +706,7 @@ The benefit of doing this is that the output of that command gets automatically 
 It'd be great if we're running some tests, then Claude Code can easily see which tests are failing, so then I can ask CC to go back and fix it for me.
 
 Currently, in the `commit-message.md` there is this section:
+
 ```
 ## Run these commands:
 
@@ -657,6 +719,7 @@ The prompt gets sent to the model first, before anything else. The model then in
 But we can shorten this process by having those bash commands run before the prompt ever gets sent to the model. We do that by entering bash mode within the prompt itself.
 
 So I can replace that section with this:
+
 ```
 ## Context:
 
@@ -673,6 +736,7 @@ For example, the comadn can look like this: `/component <arguments>`.
 Create `component.md` instruction in the `.claude/commands/component.md`.
 
 Some notes in the `description`:
+
 - `Glob` is a file pattern matching too for searching the codebase.
 - `Bash(npx vitest:*)` is to let it run any tests it creates for the component.
 
@@ -681,11 +745,13 @@ And then I added each section in the `.claude/commands/component.md`.
 Once done, type `exit` to exit the curent Claude Code session and re-enter to let it reload.
 
 And then try:
+
 ```
 /component an avatar component which displays the first letter of a name passed as a prop. If the name is PascalCase, use the first 2 uppercase letters for the avatar. No pics.
 ```
 
 It prints:
+
 ```
 ● Starting with the test file for Avatar.
 
@@ -696,7 +762,7 @@ It prints:
       1 import { render, screen } from "@testing-library/react"
       2 import { describe, it, expect } from "vitest"
       3 import Avatar from "@/components/Avatar"
-      4 
+      4
       5 describe("Avatar", () => {
       6   it("renders successfully", () => {
       7     render(<Avatar name="Alice" />)
@@ -714,7 +780,7 @@ It prints:
 
      ⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
 
-      FAIL  tests/components/Avatar.test.tsx [ 
+      FAIL  tests/components/Avatar.test.tsx [
      tests/components/Avatar.test.tsx ]
      Error: Failed to resolve import "@/components/Avatar" from
      "tests/components/Avatar.test.tsx". Does the file exist?
@@ -727,15 +793,15 @@ It prints:
 ● Bash(mkdir
       "C:\Users\MY_USERNAME\Documents\Projects\Pocket-Heist\components\Avatar")
   ⎿  Done
-  
+
 ● Write(components\Avatar\Avatar.tsx)
   ⎿  Wrote 22 lines to components\Avatar\Avatar.tsx
        1 import styles from "./Avatar.module.css"
-       2 
+       2
        3 interface AvatarProps {
        4   name: string
        5 }
-       6 
+       6
        7 function getInitials(name: string): string {
        8   const uppercaseLetters = name.match(/[A-Z]/g) ?? []
        9   if (uppercaseLetters.length >= 2) {
@@ -745,7 +811,7 @@ It prints:
 ● Write(components\Avatar\Avatar.module.css)
   ⎿  Wrote 5 lines to components\Avatar\Avatar.module.css
       1 @reference "../../app/globals.css";
-      2 
+      2
       3 .avatar {
       4   @apply flex items-center justify-center rounded-full bg-prim
         ary text-dark font-semibold text-sm w-10 h-10 select-none;
@@ -769,22 +835,22 @@ It prints:
   ⎿  Added 8 lines
       1  // preview page for newly created UI components
       2  import Skeleton from "@/components/Skeleton"
-      3 +import Avatar from "@/components/Avatar"                     
-      4  
+      3 +import Avatar from "@/components/Avatar"
+      4
       5  export default function PreviewPage() {
       6    return (
      ...
       14          <Skeleton />
       15          <Skeleton />
       16        </div>
-      17 +                                                            
-      18 +      <h3>Avatar</h3>                                       
+      17 +
+      18 +      <h3>Avatar</h3>
       19 +      <div style={{ display: "flex", gap: "1rem", marginTop:
-         + "1rem" }}>                                                 
-      20 +        <Avatar name="Alice" />                             
-      21 +        <Avatar name="PocketHeist" />                       
-      22 +        <Avatar name="bob" />                               
-      23 +      </div>                                                
+         + "1rem" }}>
+      20 +        <Avatar name="Alice" />
+      21 +        <Avatar name="PocketHeist" />
+      22 +        <Avatar name="bob" />
+      23 +      </div>
       24      </div>
       25    )
       26  }
@@ -804,6 +870,7 @@ It prints:
 ```
 
 And the component should be in this preview page:
+
 ```
 http://localhost:3000/preview
 ```
@@ -813,11 +880,12 @@ http://localhost:3000/preview
 Creating a hook to auto-format the code reated by CC using Prettier.
 
 Type `/hooks` to start setting up a hook. Select the `PostToolUse` event:
+
 ```
   Hooks
   0 hooks configured
-                              
-  ℹ This menu is read-only. To add or modify hooks, edit settings.json 
+
+  ℹ This menu is read-only. To add or modify hooks, edit settings.json
   directly or ask Claude. Learn more
 
     1.  PreToolUse          Before tool execution
@@ -833,6 +901,7 @@ About what matter patterns out there:
 https://code.claude.com/docs/en/hooks#matcher-patterns
 
 So now in `.claude/settings.local.json`, there's this hook object:
+
 ```
   "hooks": {
     "PostToolUse": [
@@ -850,6 +919,7 @@ So now in `.claude/settings.local.json`, there's this hook object:
 ```
 
 Here is what it does:
+
 ```
 Event: fires after Claude uses any tool.
 Matcher: filters to only Edit or Write tool calls.
@@ -860,7 +930,8 @@ This `type` defines the hook type which can be a command in this case or a promp
 
 To test this PostToolUse hook, I selected one line in the Home page and ask it to change the wording.
 
-And then I use `ctrl + o` to show CC's internal thinking. For example, after the code changes output in the terminal showed it's done, then type `ctrl + o` CC will toggle more details like when this PostToolUse hook ran: 
+And then I use `ctrl + o` to show CC's internal thinking. For example, after the code changes output in the terminal showed it's done, then type `ctrl + o` CC will toggle more details like when this PostToolUse hook ran:
+
 ```
 ...
   ⎿  2 PostToolUse hooks ran
@@ -868,6 +939,7 @@ And then I use `ctrl + o` to show CC's internal thinking. For example, after the
 ```
 
 Somehow the terminal didn't echo Hello, I changed it to print to a new log text file in my Downloads folder:
+
 ```
 "command": "echo \"Hello!\" >> C:/Users/MY_USERNAME/Downloads/hook-log.txt"
 ```
@@ -888,6 +960,7 @@ I installed `jq` from here:
 https://jqlang.org/download/
 
 I ended up using `scoop`:
+
 ```
 scoop install jq
 ```
@@ -897,23 +970,26 @@ For CLI tools like jq, Scoop is the best choice on Windows — it installs every
 Once installed, then create the new hooks.
 
 type `/hooks`, select `PostToolUse`
+
 ```
   PostToolUse - Matchers
-  Input to command is JSON with fields "inputs" (tool call arguments) and 
+  Input to command is JSON with fields "inputs" (tool call arguments) and
   "response" (tool call response).
 ```
 
 Here again I can see the input to command is in JSON format.
 
 So now add a new hooks into the `Write|Edit` tool's `PostToolUse` event in the `settings.local.json`:
+
 ```
 "command": "jq . > tool-use.json"
 ```
 
 Then test if this hook works using:
+
 ```
-❯ can you change the heading in the /login page to an h1 tag? 
-  @app/(public)/login/page.tsx  
+❯ can you change the heading in the /login page to an h1 tag?
+  @app/(public)/login/page.tsx
 ```
 
 It should trigger the hook - when that happens, jq should process the JSON input that Claude Code pipes into the command about the tool use and then write it to a new JSON filein the root directory.
@@ -972,7 +1048,6 @@ My `settings.local.json` hook config:
 ```
 
 Why can't Claude Code find `jq` even though it is installed?
-
 
 ###### Answer
 
@@ -1033,6 +1108,7 @@ In this section, I will focus on the `tool_input` > `file_path` which is the loc
 This will applied to any code changes made by Claude Code.
 
 To test if I can grab the `.tool_input.file_path` correctly and output to `hook-log.txt` I did this first:
+
 ```
 {
     "type": "command",
@@ -1041,34 +1117,37 @@ To test if I can grab the `.tool_input.file_path` correctly and output to `hook-
 ```
 
 Test it by first removing all the indentation in the `app/(public)/page.tsx`, and then ask CC to `make the tagline into <div>Office pranks. Zero evidence. Perfectly Petty.</div>`:
+
 ```js
 export default function Home() {
   return (
     <div className="center-content">
-    <div className="page-content">
-    <h1>
-    P<Clock8 className="logo" strokeWidth={2.75} />cket Heist
-    </h1>
-    <div>Office pranks. Zero evidence.</div>
-    <p className="mt-4 text-body">
-    Turn your workplace into a playground. Pocket Heist lets you create
-    and assign sneaky little missions to your colleagues. Swap someone&apos;s
-    screensaver, hide the stapler, reorganise the snack drawer. Harmless
-    chaos, maximum fun.
-    </p>
-    <p className="mt-2 text-body">
-    Track your active heists, see what&apos;s been assigned to you, and relive
-    your greatest (expired) schemes, all in one place.
-    </p>
+      <div className="page-content">
+        <h1>
+          P<Clock8 className="logo" strokeWidth={2.75} />
+          cket Heist
+        </h1>
+        <div>Office pranks. Zero evidence.</div>
+        <p className="mt-4 text-body">
+          Turn your workplace into a playground. Pocket Heist lets you create
+          and assign sneaky little missions to your colleagues. Swap
+          someone&apos;s screensaver, hide the stapler, reorganise the snack
+          drawer. Harmless chaos, maximum fun.
+        </p>
+        <p className="mt-2 text-body">
+          Track your active heists, see what&apos;s been assigned to you, and
+          relive your greatest (expired) schemes, all in one place.
+        </p>
+      </div>
     </div>
-    </div>
-  )
+  );
 }
 ```
 
 I just realised that it would be easier if I just run everything in Git Bash terminal as it's the closest to the Bash terminal in Linux and macOS.
 
 When it's done, it should apply the new tagline with indentations:
+
 ```js
 export default function Home() {
   return (
@@ -1115,7 +1194,6 @@ Each hook command runs as a separate process. So `jq` had nothing piped into it.
 **Problem 2: Missing `|| true`**
 
 If the file was not `.ts` or `.tsx`, the regex check failed and returned exit code `1`. Claude Code treated that as a hook failure and showed an error.
-
 
 #### The fixed command
 
@@ -1165,6 +1243,7 @@ did it work?
 ```
 
 Also, since I can confirm that jq is found in the git bash terminal, so jq is in my PATH and I can just use `jq` in my hooks commands now if I'm running CC in the git bash terminal:
+
 ```
 $ which jq
 /c/Users/Li-Ting/scoop/shims/jq
@@ -1194,6 +1273,7 @@ It means "matches this regex pattern". It only works inside `[[ ]]`.
 ```
 
 Breaking down the pattern `\.tsx?$`:
+
 - `\.` means a literal dot
 - `ts` matches the letters "ts"
 - `x?` means "x is optional"
@@ -1320,10 +1400,9 @@ This workflow makes any guesswork or incorrect assumptions from the Claude Code 
 
 Inspired by SpecKit.
 
-
 ### Making a /spec Command
 
-In `.claude/commands/spec.md`, specify how the high level spec should look like. 
+In `.claude/commands/spec.md`, specify how the high level spec should look like.
 
 #### Create the spec template file
 
@@ -1336,11 +1415,13 @@ Add a form in the signup page and a link to switch between login and signup.
 Only the frontend look for now.
 
 In Claude Code, run the following to start using this `/spec` command:
+
 ```
 /spec Let's spec the authentication forms on the /login and /signup pages. They need email and password fields, a 'hide password' icon, and a submit button (signup/login). The forms should only log details to the console for now, when they are submitted. We should be able to easily switch between the two forms.
 ```
 
 In `_specs/authentication-forms.md`, there will be content filled and this section my answers to CC's questions are as below:
+
 ```
 ## Open Questions
 
@@ -1354,22 +1435,25 @@ Suggested that I should spend more time on this spec markdown file before moving
 
 Plan mode is a read-only mode for creaitng implemnetation plans for new features.
 
-When we use plan mode, Claude Code spins up a sub agent to conduct research and gather info about the codebase. Then, that sub agent will provide the info back to Claude Code main agent to generate a plan markdown file, which includes the instructions to implment that plan like code examples, file structures, etc. 
+When we use plan mode, Claude Code spins up a sub agent to conduct research and gather info about the codebase. Then, that sub agent will provide the info back to Claude Code main agent to generate a plan markdown file, which includes the instructions to implment that plan like code examples, file structures, etc.
 
 `shift + tab` can turn on the CC's plan mode. It will show:
+
 ```
 ⏸ plan mode on
 ```
 
 Then write:
+
 ```
-plan the feature described in this spec 
-  @_specs/authentication-forms.md  
+plan the feature described in this spec
+  @_specs/authentication-forms.md
 ```
 
 Look over the plan myself first, instead of letting it edit right away.
 
 So when it asked `Would you like to proceed?`, I will tell it:
+
 ```
 No, just save the plan to the _plans folder for later
 ```
@@ -1389,6 +1473,7 @@ However, when implementing the plan, I can switch the model to Opus.
 Opus model seems very good at following the plan.
 
 Run:
+
 ```
 /model
 ```
@@ -1400,18 +1485,49 @@ And extended thinking is good for muli-step problems but it consumers more token
 I can also type `/config` to turn off the Thinking mode. But it could eat up tokens quickly with the Opus model.
 
 Then type this Claude Code:
+
 ```
-Can you implement this plan @_plans/authentication-forms.md  
+Can you implement this plan @_plans/authentication-forms.md
 ```
 
 Once done, review the code and see if I need to /rewind i.e. rollback or go ahead with the current changes.
 
-I did a refactor plan this time to see how it feels when creating a plan myself. 
+I did a refactor plan this time to see how it feels when creating a plan myself.
 
 ### Updating the CLAUDE.md File
 
-Time to update the CLAUDE.md file after all these changes. 
+Time to update the CLAUDE.md file after all these changes.
 
 Switch back to Sonnet.
 
 The tutorial suggested to rename the existing one to `CLAUDE.1.md` and run `/init` to get a new `CLAUDE.md`.
+
+## MCP Servers
+
+### What Are MCP Servers?
+
+If I'm using an external service like Figma, Firebase to my Claude Code's development workflow, then I need to use MCP servers to add the context and connectivity.
+
+MCP stands for Model Context Protocol. It's a protocol created by Anthropic to allow AI models to interact with external sources.
+
+MCP servers are the program that follow that protocol and its job is to expose a set of tools and resources to an AI model for a specific external service.
+
+If our app wantes to communicate Firebase that backend, and that Firebase MCP server exposes a bunch of tools that Claude Code can then use to work with Firebase.
+
+For example, the MCP server exposes a tool called GetConfigInfo, which CC can trigger to then fetch the setup code for a specific Firebase app, which I can then add to the project code.
+
+That MCP server can also expose resources like firebase docs which the model can then reference when needed.
+
+When the model tells CC it wants to run one of these tools, Claude doesn't run these tools itself. It's actually run on the MCP server. And that server will communicate with the external service, Firebase in this case, and Firebase will then send a response back to the MCP server and MCP server will pass the result back to CC.
+
+So CC never has direct access to the external services like Firebase, Figma, etc. CC can only trigger the tools exposed by the MCP server and then wait for the response.
+
+Next I will be practicing using these in my project.
+
+MCP Servers:
+
+- Context7: Provides up-to-date documentation to libraries & frameworks
+- Figma: Allows Claude Code access to design information & snapshots from a Figma file
+- Firebase: Interact with a Firebase backend e.g. setup Firebase authentication and database
+
+### Adding an MCP Server
