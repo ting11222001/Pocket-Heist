@@ -405,19 +405,17 @@ I can also use `@` in the CLAUDE.md to manually add files into context of the pr
 It's useful when I want to add a design reference for a new component.
 
 For example:
-
 ```
 Can you make a new Skeleton UI component for later use? Base the design on the following image, but use colours to match this project. @public/skeleton.png
 ```
 
-And ideally in CLAUDE.md > Component Structure section, the new component should be updated into that file structure chart. -> need to check on this later.
-
-Added the skeleton component in the preview page:
-
+Then, add the skeleton component in the preview page:
 ```
 can you add this skeleton component to the preview page in a grid layout,
   so we can preview it?
 ```
+
+The skeleton component should look exactly the same as the image referenced.
 
 ### The Context Window
 
