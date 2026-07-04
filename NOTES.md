@@ -1529,3 +1529,70 @@ MCP Servers:
 - Firebase: Interact with a Firebase backend e.g. setup Firebase authentication and database
 
 ### Adding an MCP Server
+
+https://context7.com/
+
+Context7 gives Claude Code the latest documentation of a particular framework or library.
+
+E.g. Tailwind, Next.js, React, etc.
+
+The tutorial wants me to:
+- Choose the Remote Server connection so the server is maintained and updated remotely.
+
+Somehow the website doesn't have install page directed to GitHub, so I come to the repo:
+https://github.com/upstash/context7
+
+This installation part:
+https://github.com/upstash/context7#installation
+
+Then this page [here](https://context7.com/docs/resources/all-clients#claude-code):
+```bash
+claude mcp add --scope user --header "CONTEXT7_API_KEY: YOUR_API_KEY" --transport http context7 https://mcp.context7.com/mcp
+```
+
+To get my API key on Context7, sign up and go to my dashboard. Create API key. The key name will be `for-claude-code-practice-2026-06`.
+
+From that mcp server install command for CC, there are different scope level:
+https://code.claude.com/docs/en/mcp#local-scope <- default
+https://code.claude.com/docs/en/mcp#project-scope
+https://code.claude.com/docs/en/mcp#user-scope
+
+So the configuration will be made available to all the projects to a user account.
+
+The tutorial sticks with the local scope:
+https://code.claude.com/docs/en/mcp#local-scope
+
+So I changed the install command to this `$ claude mcp add...` and it should print the below. Note that since I didn't add the `scope` flag, so by default this newly added MCP will be at the `local` scope:
+```bash
+$ claude mcp add --header "CONTEXT7_API_KEY: YOUR_API_KEY" --transport http context7 https://mcp.context7.com/mcp
+
+Added HTTP MCP server context7 with URL: https://mcp.context7.com/mcp to local config
+Headers: {
+  "CONTEXT7_API_KEY": "[REDACTED]"
+}
+File modified: C:\Users\Li-Ting\.claude.json [project: C:\Users\Li-Ting\Documents\Projects\Pocket-Heist]
+```
+
+To see what MCP servers this current project has access to, run `claude` and then `/mcp`:
+```bash
+Manage MCP servers
+  8 servers
+
+    Local MCPs (C:\Users\Li-Ting\.claude.json [project:
+              C:\Users\Li-Ting\Documents\Projects\Pocket-Heist])
+  ❯ context7 · ✔ connected · 2 tools
+  ...
+```
+
+And I can keep hitting enter to see the details, e.g. this context7 MCP will call these tools:
+```bash
+ Tools for context7
+  2 tools
+
+  ❯ 1. resolve-library-id  read-only, open-world
+    2. query-docs          read-only, open-world
+```
+
+Note that local scope is tied to one project path, context7 will not appear in my other projects.
+
+### Using Context7
