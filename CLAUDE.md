@@ -98,3 +98,7 @@ New features follow a three-stage spec-driven process before any code is written
 - Do not apply more than one Tailwind class directly in JSX — use `@apply` in a CSS Module instead
 - Keep dependencies minimal — avoid adding packages when the existing stack can handle it
 - Use `git switch -c <branch>` to create and switch to new branches (not `git checkout -b`)
+
+## Checking Documentation
+
+important: When implementing any lib/framework-specific features, ALWAYS check the appropriate lib/framework documentation using the Context7 MCP server before writing any code.

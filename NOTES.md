@@ -1596,3 +1596,54 @@ And I can keep hitting enter to see the details, e.g. this context7 MCP will cal
 Note that local scope is tied to one project path, context7 will not appear in my other projects.
 
 ### Using Context7
+
+Open `globals.css`, and cursor selected:
+```
+@theme {
+  --color-primary: #C27AFF;
+  --color-secondary: #FB64B6;
+  --color-dark: #030712;
+  --color-light: #0A101D;
+  --color-lighter: #101828;
+  --color-success: #05DF72;
+  --color-error: #FF6467;
+  --color-heading: white;
+  --color-body: #99A1AF;
+  --font-sans: 'Inter', sans-serif;
+}
+```
+
+Then prompt claude claude:
+```
+Can you check the Tailwind 4 docs using Context7 to make sure these theme variables are set up correctly
+```
+
+Say yes to allow permissions like this:
+```
+Yes, and don't ask again for context7 - query-docs commands in C:\Users\Li-Ting\Documents\Projects\Pocket-Heist
+```
+
+And then see this returned response from Context7:
+```
+Your theme setup is correct and matches the Tailwind v4 docs. Here's the verification:
+
+  ✅ Everything checks out
+
+  Namespaces are right. Both namespaces you use are valid per the docs:
+
+  ┌────────────────────────────────┬───────────┬────────────────────────────────────────────────────┐                    
+  │         Your variable          │ Namespace │                     Generates                      │
+  ├────────────────────────────────┼───────────┼────────────────────────────────────────────────────┤
+  │ --color-primary … --color-body │ --color-* │ bg-primary, text-body, bg-dark, text-heading, etc. │
+  ├────────────────────────────────┼───────────┼────────────────────────────────────────────────────┤
+  │ --font-sans                    │ --font-*  │ font-sans                                          │
+  └────────────────────────────────┴───────────┴────────────────────────────────────────────────────┘
+
+  Every custom class in your file resolves correctly against these — bg-primary, text-dark, hover:bg-secondary, text-body, bg-dark,
+  text-heading all map to a defined variable.
+
+  Structure is idiomatic. @import "tailwindcss" followed by @theme { … } with --color-* and --font-* tokens is exactly the documented
+  pattern.
+```
+
+and then add these to `CLAUDE.md`.
